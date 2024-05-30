@@ -1,0 +1,21 @@
+
+.welcome-container {
+  text-align: center;
+  margin: 20px;
+}
+
+.welcome-container .welcome-image {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.welcome-container h2 {
+  margin-bottom: 20px;
+}
+
+.welcome-container p {
+  font-size: 16px;
+  color: #555;
+}
