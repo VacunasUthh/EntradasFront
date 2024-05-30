@@ -1,9 +1,10 @@
-
 import React, { useState } from 'react';
 import Login from './components/Login';
 import Register from './components/Register';
 import Welcome from './components/Welcome';
 import Menu from './components/Menu';
+import Schedule from './components/Schedule';
+import AddStudent from './components/AddStudent';
 import './App.css';
 
 const App: React.FC = () => {
@@ -46,13 +47,9 @@ const App: React.FC = () => {
           <Menu onMenuClick={handleMenuClick} onLogout={handleLogout} />
           <div className="content">
             {currentSection === 'welcome' && <Welcome username={user || ''} />}
-            {currentSection === 'schedule' && (
-              <div>
-                <h2>Horario</h2>
-                {/* Aquí va el contenido del horario */}
-              </div>
-            )}
-            {/* Puedes añadir más secciones aquí */}
+            {currentSection === 'schedule' && <Schedule />}
+            {currentSection === 'addStudents' && <AddStudent />}
+            {/* Aquí puedes añadir más secciones según sea necesario */}
           </div>
         </>
       ) : (
