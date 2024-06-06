@@ -13,7 +13,7 @@ const Login: React.FC<Props> = ({ onLogin, onRegisterClick }) => {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    if (username === 'Rosario' && password === 'qwerty') {
+    if (username === 'R' && password === 'q') {
       onLogin(username);
     } else {
       setError('Invalid username or password');

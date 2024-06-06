@@ -1,51 +1,74 @@
 .schedule-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 20px;
-  }
-  
-  .header {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-  }
-  
-  .header input {
-    margin-right: 10px;
-  }
-  
-  .main-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .info-section {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-  }
-  
-  .data-inputs {
-    margin-right: 20px;
-  }
-  
-  .hours-display {
-    margin-left: 20px;
-  }
-  
-  .calendar-section {
-    margin-top: 20px;
-  }
-  
-  .calendar-section table {
-    border-collapse: collapse;
-  }
-  
-  .calendar-section td {
-    border: 1px solid black;
-    padding: 10px;
-    text-align: center;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.header input {
+  margin-right: 10px;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.info-section {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1200px;
+  margin-bottom: 20px;
+}
+
+.info-left, .info-center, .info-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.info-left {
+  margin-right: 20px;
+}
+
+.info-center {
+  flex: 2;
+  margin: 0 20px;
+}
+
+.info-right {
+  margin-left: 20px;
+}
+
+.data-inputs, .hours-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.calendar-section {
+  margin-top: 20px;
+}
+
+.calendar-section table {
+  border-collapse: collapse;
+}
+
+.calendar-section td {
+  border: 1px solid black;
+  padding: 10px;
+  text-align: center;
+}
