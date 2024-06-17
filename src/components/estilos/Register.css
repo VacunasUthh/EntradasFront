@@ -1,41 +1,68 @@
 .register-container {
-    width: 300px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .register-container h2 {
-    margin-bottom: 20px;
-  }
-  
-  .register-form {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .register-form label {
-    margin-bottom: 5px;
-  }
-  
-  .register-form input {
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .register-form button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .register-form button:hover {
-    background-color: #0056b3;
-  }
-  
+  width: 300px;
+  padding: 20px;
+  border: 1px solid #a02142;
+  border-radius: 5px;
+  text-align: center;
+  background-color: #fff; /* Fondo blanco para el formulario */
+}
+
+.register-container h2 {
+  margin-bottom: 20px;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group2 {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.register-form label {
+  margin-bottom: 5px;
+  display: block;
+}
+
+.register-form input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 5px;
+
+  border-radius: 5px;
+  border: 1px solid #a02142;
+}
+
+.register-button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.register-button:hover {
+  background-color: #0056b3;
+}
+
+.login-button {
+  background: none;
+  color: #007bff;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.login-button:hover {
+  color: #0056b3;
+}
+
+.error {
+  color: red;
+  margin-bottom: 10px;
+}

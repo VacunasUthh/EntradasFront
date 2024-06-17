@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MailOutlined, LogoutOutlined } from '@ant-design/icons';
+import { UserOutlined, UserAddOutlined, LogoutOutlined, CalendarOutlined } from '@ant-design/icons';
 import type { MenuProps, MenuTheme } from 'antd';
 import { Menu as AntMenu, Switch } from 'antd';
 import './estilos/Menu.css';
@@ -26,20 +26,21 @@ const CustomMenu: React.FC<Props> = ({ onMenuClick, onLogout }) => {
     }
   };
 
+  //Se instalo iconos con este comando npm install @ant-design/icons --save
   const items: MenuProps['items'] = [
     {
       key: 'welcome',
-      icon: <MailOutlined />,
+      icon: <UserOutlined />,
       label: 'Bienvenida',
     },
     {
       key: 'schedule',
-      icon: <MailOutlined />,
+      icon: <CalendarOutlined />,
       label: 'Horarios',
     },
     {
       key: 'addStudents',
-      icon: <MailOutlined />,
+      icon: <UserAddOutlined />,
       label: 'Añadir alumnos',
     },
     {

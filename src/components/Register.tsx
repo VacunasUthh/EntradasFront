@@ -24,7 +24,7 @@ const Register: React.FC<Props> = ({ onRegister, onLoginClick }) => {
     <div className="register-container">
       <h2>Register</h2>
       <form className="register-form" onSubmit={handleSubmit}>
-        <div>
+        <div className="form-group2">
           <label>Usuario:</label>
           <input
             type="text"
@@ -32,7 +32,7 @@ const Register: React.FC<Props> = ({ onRegister, onLoginClick }) => {
             onChange={(e) => setUsername(e.target.value)}
           />
         </div>
-        <div>
+        <div className="form-group2">
           <label>Contraseña:</label>
           <input
             type="password"
@@ -41,10 +41,10 @@ const Register: React.FC<Props> = ({ onRegister, onLoginClick }) => {
           />
         </div>
         {error && <div className="error">{error}</div>}
-        <button type="submit">Registrar</button>
+        <button type="submit" className="register-button">Registrar</button>
       </form>
       <p>
-        Ya tienes una cuenta? <button onClick={onLoginClick}>Entre aquí</button>
+        Ya tienes una cuenta? <button className="login-button" onClick={onLoginClick}>Entre aquí</button>
       </p>
     </div>
   );

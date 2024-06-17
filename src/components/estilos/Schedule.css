@@ -11,8 +11,35 @@
   margin-bottom: 20px;
 }
 
+.header .search-button {
+  background-color: #03983E;
+  border-radius: 5px;
+  border: 1px solid #03983E;
+  color: white;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.header .search-button:hover {
+  background-color: #53bf7c; /* Cambia el color al hacer hover */
+}
+
 .header input {
   margin-right: 10px;
+  border: 1px solid #ffffff;
+  border-radius: 5px;
+  padding: 10px;
+  outline: none;
+}
+
+.header input.input-error {
+  border-color: red;
+}
+
+.error-message {
+  color: black;
+  margin-top: -10px;
+  margin-bottom: 20px;
 }
 
 .main-content {
@@ -36,8 +63,9 @@
   align-items: center;
   justify-content: center;
   padding: 20px;
-  border: 1px solid #ddd;
+  border: 1px solid #E6AF2A;
   border-radius: 5px;
+  background-color: #E6AF2A;
 }
 
 .info-left {

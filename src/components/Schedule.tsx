@@ -1,16 +1,48 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Calendar from 'react-calendar';
 import './estilos/Schedule.css';
 import 'react-calendar/dist/Calendar.css';
 import './estilos/CustomCalendar.css'; 
 
 const Schedule: React.FC = () => {
+  const [matricula, setMatricula] = useState('');
+  const [errors, setErrors] = useState<{ matricula?: string }>({});
+
+  const handleMatriculaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMatricula(e.target.value);
+  };
+
+  const validateMatricula = () => {
+    const newErrors: { matricula?: string } = {};
+    if (!/^\d{8}$/.test(matricula)) {
+      newErrors.matricula = 'La matrícula debe ser exactamente 8 dígitos.';
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSearchClick = () => {
+    if (validateMatricula()) {
+      // Aquí puedes añadir la lógica de búsqueda de la matrícula
+      console.log('Matrícula válida:', matricula);
+    } else {
+      console.log('Errores de validación:', errors);
+    }
+  };
+
   return (
     <div className="schedule-container">
       <div className="header">
-        <input type="text" placeholder="Buscar..." />
-        <button>🔍</button>
+        <input 
+          type="text" 
+          placeholder="Matricula del alumno" 
+          value={matricula}
+          onChange={handleMatriculaChange}
+          className={errors.matricula ? 'input-error' : ''}
+        />
+        <button className="search-button" onClick={handleSearchClick}>🔍</button>
       </div>
+      {errors.matricula && <p className="error-message">{errors.matricula}</p>}
       <div className="main-content">
         <div className="info-section">
           <div className="info-left">

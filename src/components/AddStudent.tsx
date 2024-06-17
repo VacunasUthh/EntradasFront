@@ -17,7 +17,8 @@ const AddStudent: React.FC = () => {
     }
 
     // Validar correo electrónico
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(correo)) {
       errors.correo = 'El correo electrónico no es válido.';
     }
 

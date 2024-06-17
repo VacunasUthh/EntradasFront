@@ -13,15 +13,15 @@ const Login: React.FC<Props> = ({ onLogin, onRegisterClick }) => {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    if (username === 'R' && password === 'q') {
+    if (username === 'R' && password === 'R') {
       onLogin(username);
     } else {
-      setError('Invalid username or password');
+      setError('Usuario o contraseña incorrecta');
     }
   };
 
   return (
-    <div className="login-container">
+    <div className="login-container3">
       <img src="/imagenes/imgLogin.png" alt="Welcome" className="login-image" />
       <h2>Inicio de sesión</h2>
       <form className="login-form" onSubmit={handleSubmit}>

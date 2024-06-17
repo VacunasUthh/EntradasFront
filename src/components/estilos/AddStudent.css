@@ -3,14 +3,22 @@
   flex-direction: column;
   align-items: center;
   margin-top: 20px;
+  width: 200%; /* Asegura que el contenedor ocupe todo el ancho disponible */
 }
 
 .add-student-container h2 {
   margin-bottom: 20px;
 }
 
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
+  width: 200%; /* Asegura que el grupo del formulario ocupe todo el ancho del contenedor */
 }
 
 .form-group label {
@@ -20,7 +28,7 @@
 
 .form-group input,
 .form-group textarea {
-  width: 100%;
+  width: 100%; /* Mantiene el ancho anterior */
   padding: 8px;
   box-sizing: border-box;
 }
@@ -31,14 +39,14 @@
 
 button {
   padding: 10px 20px;
-  background-color: #007bff;
+  background-color: #03983E;
   color: white;
   border: none;
   cursor: pointer;
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #53bf7c;
 }
 
 /* Estilos adicionales para mostrar errores */

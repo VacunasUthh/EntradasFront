@@ -52,22 +52,25 @@ const App: React.FC = () => {
             <CustomMenu onMenuClick={handleMenuClick} onLogout={handleLogout} />
           </Sider>
           <Layout>
-            {/* Eliminamos el Header ya que no es necesario */}
-            <Content style={{ margin: '0 16px', padding: '0' }}>
-              <div className="site-layout-background" style={{ padding: '24px', minHeight: '360px' }}>
-                {currentSection === 'welcome' && <Welcome username={user || ''} />}
-                {currentSection === 'schedule' && <Schedule />}
-                {currentSection === 'addStudents' && <AddStudent />}
-              </div>
+            <Content>
+              {currentSection === 'welcome' && <Welcome username={user || ''} />}
+              {currentSection === 'schedule' && <Schedule />}
+              {currentSection === 'addStudents' && <AddStudent />}
             </Content>
-            <Footer style={{ textAlign: 'center' }}>Ant Design ©{new Date().getFullYear()} Created by Ant UED</Footer>
+            <Footer style={{ textAlign: 'center', backgroundColor: '#A02142' }}>
+              Ant Design ©{new Date().getFullYear()} Created by Ant UED
+            </Footer>
           </Layout>
         </>
       ) : (
         showRegister ? (
-          <Register onRegister={handleRegister} onLoginClick={handleShowLogin} />
+          <Content>
+            <Register onRegister={handleRegister} onLoginClick={handleShowLogin} />
+          </Content>
         ) : (
-          <Login onLogin={handleLogin} onRegisterClick={handleShowRegister} />
+          <Content>
+            <Login onLogin={handleLogin} onRegisterClick={handleShowRegister} />
+          </Content>
         )
       )}
     </Layout>
