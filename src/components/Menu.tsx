@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { UserOutlined, UserAddOutlined, LogoutOutlined, CalendarOutlined } from '@ant-design/icons';
-import type { MenuProps, MenuTheme } from 'antd';
-import { Menu as AntMenu, Switch } from 'antd';
+import { UserOutlined, UserAddOutlined, LogoutOutlined, CalendarOutlined, TeamOutlined, ScheduleOutlined } from '@ant-design/icons';
+import type { MenuProps } from 'antd';
+import { Menu as AntMenu } from 'antd';
+import colors from '../colors';
 import './estilos/Menu.css';
 
 interface Props {
@@ -10,12 +11,7 @@ interface Props {
 }
 
 const CustomMenu: React.FC<Props> = ({ onMenuClick, onLogout }) => {
-  const [menuTheme, setMenuTheme] = useState<MenuTheme>('light');
   const [current, setCurrent] = useState('1');
-
-  const changeTheme = (value: boolean) => {
-    setMenuTheme(value ? 'dark' : 'light');
-  };
 
   const onClick: MenuProps['onClick'] = (e) => {
     if (e.key === 'logout') {
@@ -26,7 +22,6 @@ const CustomMenu: React.FC<Props> = ({ onMenuClick, onLogout }) => {
     }
   };
 
-  //Se instalo iconos con este comando npm install @ant-design/icons --save
   const items: MenuProps['items'] = [
     {
       key: 'welcome',
@@ -44,6 +39,16 @@ const CustomMenu: React.FC<Props> = ({ onMenuClick, onLogout }) => {
       label: 'Añadir alumnos',
     },
     {
+      key: 'studentList',
+      icon: <TeamOutlined />,
+      label: 'Lista de alumnos',
+    },
+    {
+      key: 'assignSchedule',
+      icon: <ScheduleOutlined />,
+      label: 'Asignar Horarios',
+    },
+    {
       key: 'logout',
       icon: <LogoutOutlined />,
       label: 'Cerrar sesión',
@@ -51,24 +56,15 @@ const CustomMenu: React.FC<Props> = ({ onMenuClick, onLogout }) => {
   ];
 
   return (
-    <>
-      <Switch
-        checked={menuTheme === 'dark'}
-        onChange={changeTheme}
-        checkedChildren="Dark"
-        unCheckedChildren="Light"
-      />
-      <br />
-      <br />
-      <AntMenu
-        onClick={onClick}
-        style={{ width: '100%' }}
-        selectedKeys={[current]}
-        mode="inline"
-        theme={menuTheme}
-        items={items}
-      />
-    </>
+    <AntMenu
+      onClick={onClick}
+      style={{ width: '100%', backgroundColor: colors.background }}
+      selectedKeys={[current]}
+      mode="inline"
+      theme="light"
+      items={items}
+      className="menu"
+    />
   );
 };
 

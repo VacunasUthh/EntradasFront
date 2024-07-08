@@ -1,7 +1,10 @@
+/* estilos/Menu.css */
 .menu {
   display: flex;
   flex-direction: column;
   height: 100%;
+  background-color: white; /* Fondo blanco para el menú */
+  border-right: none; /* Remover borde si lo tiene */
 }
 
 .menu ul {
@@ -16,11 +19,37 @@
 .menu button {
   background: none;
   border: none;
-  color: white;
+  color: black; /* Color del texto negro para el tema claro */
   cursor: pointer;
   font-size: 16px;
 }
 
 .menu button:hover {
   text-decoration: underline;
+}
+
+/* Asegurarse de que todo el contenedor del menú sea blanco */
+.ant-menu {
+  background-color: white !important; /* Fondo blanco para el contenedor del menú */
+}
+
+.ant-menu-item-selected {
+  background-color: #e6f7ff !important; /* Mantener el fondo seleccionado claro */
+}
+
+/* Usar colores personalizados */
+.ant-menu-dark .ant-menu-item-selected {
+  background-color: var(--primary-color) !important;
+}
+
+.ant-menu-item:hover {
+  background-color: var(--accent-color) !important;
+}
+
+/* Definir variables CSS para los colores */
+:root {
+  --primary-color: #3498db;
+  --accent-color: #a02142;
+  --background-color: #bc955b;
+  --text-color: #000000;
 }

@@ -2,23 +2,27 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 20px;
-  width: 200%; /* Asegura que el contenedor ocupe todo el ancho disponible */
+  justify-content: center; /* Centra verticalmente */
+  padding: 20px;
+  background-color: #bc955b;
+  border-radius: 8px;
+  max-width: 600px;
+  width: 100%;
 }
 
 .add-student-container h2 {
   margin-bottom: 20px;
 }
 
-form {
+.form-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  width: 100%;
 }
 
 .form-group {
   margin-bottom: 20px;
-  width: 200%; /* Asegura que el grupo del formulario ocupe todo el ancho del contenedor */
+  width: 100%;
 }
 
 .form-group label {
@@ -28,7 +32,7 @@ form {
 
 .form-group input,
 .form-group textarea {
-  width: 100%; /* Mantiene el ancho anterior */
+  width: 100%;
   padding: 8px;
   box-sizing: border-box;
 }
@@ -38,18 +42,19 @@ form {
 }
 
 button {
-  padding: 10px 20px;
+  padding: 15px 20px;
   background-color: #03983E;
   color: white;
   border: none;
   cursor: pointer;
+  align-self: center; /* Centra el botón */
+  border-radius: 10px;
 }
 
 button:hover {
   background-color: #53bf7c;
 }
 
-/* Estilos adicionales para mostrar errores */
 .error {
   color: red;
   font-size: 12px;

@@ -1,6 +1,9 @@
 .welcome-container {
   text-align: center;
   margin: 20px;
+  padding: 20px;
+  background-color: #bc955b;
+  border-radius: 8px;
 }
 
 .welcome-container .welcome-image {
@@ -12,9 +15,10 @@
 
 .welcome-container h2 {
   margin-bottom: 25px;
+  color: var(--text-color); /* Puedes ajustar el color de texto aquí */
 }
 
 .welcome-container p {
   font-size: 18px;
-  color: #000000;
+  color: var(--text-color); /* Puedes ajustar el color de texto aquí */
 }

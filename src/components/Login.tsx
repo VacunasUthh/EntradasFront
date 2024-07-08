@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import './estilos/Login.css';
 
 interface Props {
   onLogin: (user: string) => void;
-  onRegisterClick: () => void; // Añadimos esto para el botón de registro
+  onRegisterClick: () => void;
 }
 
 const Login: React.FC<Props> = ({ onLogin, onRegisterClick }) => {
@@ -11,12 +12,26 @@ const Login: React.FC<Props> = ({ onLogin, onRegisterClick }) => {
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (username === 'R' && password === 'R') {
-      onLogin(username);
-    } else {
-      setError('Usuario o contraseña incorrecta');
+    setError(null);
+      
+    try {
+      const url = `https://entradas-backend.vercel.app/docentes/buscar?matricula=${username}&password=${password}`;
+      console.log('URL:', url);  // Imprime la URL para depuración
+
+      const response = await axios.get(url);
+      console.log('Response:', response);  // Imprime la respuesta del servidor
+
+      // Verificamos si la respuesta es válida
+      if (response.data && response.status === 200) {
+        onLogin(username);  // Llamamos la función de onLogin si el usuario es válido
+      } else {
+        setError('Usuario o contraseña incorrecta');
+      }
+    } catch (error) {
+      console.error('Error:', error);  // Imprime el error para depuración
+      setError('Error en la autenticación. Intenta nuevamente.');
     }
   };
 
@@ -42,7 +57,7 @@ const Login: React.FC<Props> = ({ onLogin, onRegisterClick }) => {
           />
         </div>
         {error && <div className="error">{error}</div>}
-        <button type="submit">Login</button>
+        <button type="submit">Iniciar Sesion</button>
       </form>
       <p>
         ¿No tienes una cuenta? <button onClick={onRegisterClick}>Regístrate aquí</button>

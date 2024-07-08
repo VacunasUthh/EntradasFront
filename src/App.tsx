@@ -1,14 +1,21 @@
 import React, { useState } from 'react';
-import { Layout } from 'antd';
+import {
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+} from '@ant-design/icons';
+import { Button, Layout } from 'antd';
 import Login from './components/Login';
 import Register from './components/Register';
 import Welcome from './components/Welcome';
 import CustomMenu from './components/Menu';
 import Schedule from './components/Schedule';
 import AddStudent from './components/AddStudent';
+import StudentList from './components/StudentList';
+import AssignSchedule from './components/AssignSchedule'; 
 import './App.css';
+import colors from './colors';
 
-const { Content, Footer, Sider } = Layout;
+const { Header, Sider, Content, Footer } = Layout;
 
 const App: React.FC = () => {
   const [user, setUser] = useState<string | null>(null);
@@ -45,33 +52,59 @@ const App: React.FC = () => {
   };
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
+    <Layout style={{ minHeight: '100vh', backgroundColor: colors.background }}>
       {user ? (
         <>
-          <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
+          <Sider trigger={null} collapsible collapsed={collapsed} style={{ backgroundColor: colors.primary }}>
+            <div className="demo-logo-vertical" />
             <CustomMenu onMenuClick={handleMenuClick} onLogout={handleLogout} />
           </Sider>
           <Layout>
-            <Content>
+            <Header style={{ padding: 0, backgroundColor: colors.headerBg }}>
+              <Button
+                type="text"
+                icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                onClick={() => setCollapsed(!collapsed)}
+                style={{
+                  fontSize: '16px',
+                  width: 64,
+                  height: 64,
+                }}
+              />
+            </Header>
+            <Content
+              style={{
+                padding: 24,
+                backgroundColor: colors.containerBg,
+                borderRadius: '8px',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                width: '100%',
+                flex: 1,
+                overflow: 'auto',
+              }}
+            >
               {currentSection === 'welcome' && <Welcome username={user || ''} />}
               {currentSection === 'schedule' && <Schedule />}
-              {currentSection === 'addStudents' && <AddStudent />}
+              {currentSection === 'addStudents' && <AddStudent username={user || ''}/>}
+              {currentSection === 'studentList' && <StudentList username={user || ''}/>}
+              {currentSection === 'assignSchedule' && <AssignSchedule studentId={user || ''}/>}
+
             </Content>
-            <Footer style={{ textAlign: 'center', backgroundColor: '#A02142' }}>
+            <Footer style={{ textAlign: 'center', backgroundColor: colors.footerBg, color: colors.text }}>
               Ant Design ©{new Date().getFullYear()} Created by Ant UED
             </Footer>
           </Layout>
         </>
       ) : (
-        showRegister ? (
-          <Content>
+        <Content className="centered-content" style={{ backgroundColor: colors.background }}>
+          {showRegister ? (
             <Register onRegister={handleRegister} onLoginClick={handleShowLogin} />
-          </Content>
-        ) : (
-          <Content>
+          ) : (
             <Login onLogin={handleLogin} onRegisterClick={handleShowRegister} />
-          </Content>
-        )
+          )}
+        </Content>
       )}
     </Layout>
   );

@@ -1,31 +1,20 @@
-.App {
-  text-align: center;
+html, body, #root {
+  height: 100%;
+  margin: 0;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.ant-layout {
+  min-height: 100%;
+  background-color: #bc955b;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.centered-content {
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
+  align-items: center;
+  min-height: 100vh;
+  padding: 24px;
+  background-color: #bc955b;
 }
 
 @keyframes App-logo-spin {
@@ -38,12 +27,12 @@
 }
 
 .login-container3 {
-  max-width: 400px;
   margin: 0 auto;
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff; /* Color de fondo para inputs */
 }
 
 .login-container3 h2 {
@@ -67,45 +56,7 @@
 }
 
 .login-container3 .error {
-  color: red;
+  color: #e74c3c; /* Color para mensajes de error */
   margin-bottom: 15px;
   text-align: center;
-}
-
-/* Diseño de la barra de navegacion de logeo  */
-
-.App {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-.content {
-  margin-left: 200px; /* Deja espacio para el menú en el lado izquierdo */
-}
-
-nav.menu {
-  position: fixed;
-  left: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-html, body, #root {
-  height: 100%;
-  margin: 0;
-}
-
-.ant-layout {
-  height: 100%;
-}
-
-.ant-layout-content {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  padding: 0;
-  background-color: #bc955b; /* Cambia esto al color de fondo que desees */
 }

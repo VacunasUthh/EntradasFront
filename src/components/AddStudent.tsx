@@ -1,35 +1,32 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import './estilos/AddStudent.css';
 
-const AddStudent: React.FC = () => {
+interface Props {
+  username: string;
+}
+
+const AddStudent: React.FC<Props> = ({ username }) => {
   const [matricula, setMatricula] = useState<string>('');
   const [correo, setCorreo] = useState<string>('');
   const [proyecto, setProyecto] = useState<string>('');
-  const [descripcion, setDescripcion] = useState<string>('');
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [successMessage, setSuccessMessage] = useState<string>('');
 
   const validate = () => {
     const errors: { [key: string]: string } = {};
 
-    // Validar matrícula (debe ser exactamente 8 dígitos)
     if (!/^\d{8}$/.test(matricula)) {
       errors.matricula = 'La matrícula debe ser de exactamente 8 dígitos.';
     }
 
-    // Validar correo electrónico
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(correo)) {
       errors.correo = 'El correo electrónico no es válido.';
     }
 
-    // Validar proyecto (no vacío)
     if (!proyecto) {
       errors.proyecto = 'El proyecto es obligatorio.';
-    }
-
-    // Validar descripción (mínimo 10 caracteres)
-    if (descripcion.length < 10) {
-      errors.descripcion = 'La descripción debe tener al menos 10 caracteres.';
     }
 
     setErrors(errors);
@@ -37,17 +34,31 @@ const AddStudent: React.FC = () => {
     return Object.keys(errors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
-      // Aquí puedes manejar el envío de datos
-      console.log({ matricula, correo, proyecto, descripcion });
-      // Limpiar los campos después del envío
-      setMatricula('');
-      setCorreo('');
-      setProyecto('');
-      setDescripcion('');
-      setErrors({});
+      try {
+        const response = await axios.put(`http://localhost:3000/docentes/agregar-alumno/${username}`, {
+          matricula,
+          correo,
+          proyecto,
+          horario: {
+            entrada: '08:00',
+            receso: 40,
+            salida: '14:00',
+          }
+        });
+
+        if (response.status === 200) {
+          setSuccessMessage('Estudiante añadido exitosamente');
+          setMatricula('');
+          setCorreo('');
+          setProyecto('');
+          setErrors({});
+        }
+      } catch (error) {
+        console.error('Error al añadir el estudiante:', error);
+      }
     }
   };
 
@@ -61,7 +72,8 @@ const AddStudent: React.FC = () => {
   return (
     <div className="add-student-container">
       <h2>Añadir Alumnos</h2>
-      <form onSubmit={handleSubmit}>
+      {successMessage && <p className="success-message">{successMessage}</p>}
+      <form onSubmit={handleSubmit} className="form-container">
         <div className="form-group">
           <label>Matrícula:</label>
           <input
@@ -98,12 +110,7 @@ const AddStudent: React.FC = () => {
         </div>
         <div className="form-group">
           <label>Descripción:</label>
-          <textarea
-            value={descripcion}
-            onChange={(e) => setDescripcion(e.target.value)}
-            className={errors.descripcion ? 'input-error' : ''}
-            required
-          ></textarea>
+          
           {errors.descripcion && <span className="error">{errors.descripcion}</span>}
         </div>
         <button type="submit">Añadir</button>

@@ -2,7 +2,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 20px;
+  margin-top: 25px;
+}
+
+.schedule-container p, label {
+  font-size: 16px;
+  color: black;
 }
 
 .header {
@@ -12,16 +17,16 @@
 }
 
 .header .search-button {
-  background-color: #03983E;
+  background-color: #2ecc71;
   border-radius: 5px;
-  border: 1px solid #03983E;
+  border: 1px solid #2ecc71;
   color: white;
   padding: 10px 20px;
   cursor: pointer;
 }
 
 .header .search-button:hover {
-  background-color: #53bf7c; /* Cambia el color al hacer hover */
+  background-color: #53bf7c;
 }
 
 .header input {
@@ -33,7 +38,7 @@
 }
 
 .header input.input-error {
-  border-color: red;
+  border-color: #e74c3c; /* Color para mensajes de error */
 }
 
 .error-message {
@@ -44,16 +49,18 @@
 
 .main-content {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row; 
+  justify-content: space-between; 
+  align-items: flex-start;
+  width: 100%;
+  max-width: 1200px;
 }
 
 .info-section {
   display: flex;
   justify-content: space-between;
-  width: 100%;
-  max-width: 1200px;
-  margin-bottom: 20px;
+  flex: 3;
+  margin-right: 20px;
 }
 
 .info-left, .info-center, .info-right {
@@ -63,9 +70,9 @@
   align-items: center;
   justify-content: center;
   padding: 20px;
-  border: 1px solid #E6AF2A;
+  border: 1px solid #e6af2a; /* Color para bordes */
   border-radius: 5px;
-  background-color: #E6AF2A;
+  background-color: #e6af2a; /* Color de fondo */
 }
 
 .info-left {
@@ -88,7 +95,10 @@
 }
 
 .calendar-section {
-  margin-top: 20px;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .calendar-section table {
