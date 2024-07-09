@@ -1,0 +1,51 @@
+.assign-schedule-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .assign-schedule-card {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+  }
+  
+  .assign-schedule-title {
+    text-align: center;
+    margin-bottom: 24px;
+    color: #333;
+  }
+  
+  .assign-schedule-form .ant-form-item {
+    margin-bottom: 16px;
+  }
+  
+  .assign-schedule-form .ant-row {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .assign-schedule-form .ant-col {
+    flex: 1;
+    margin-right: 16px;
+  }
+  
+  .assign-schedule-form .ant-col:last-child {
+    margin-right: 0;
+  }
+  
+  .assign-schedule-form .basic-multi-select {
+    width: 100%;
+  }
+  
+  .assign-schedule-button {
+    background-color: #03983E !important;
+    border-color: #03983E !important;
+  }
+  
+  .assign-schedule-button:hover {
+    background-color: #53bf7c;
+    border-color: #53bf7c !important;
+  }
+  

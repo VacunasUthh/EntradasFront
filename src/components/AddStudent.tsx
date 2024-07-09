@@ -38,7 +38,7 @@ const AddStudent: React.FC<Props> = ({ username }) => {
     e.preventDefault();
     if (validate()) {
       try {
-        const response = await axios.put(`http://localhost:3000/docentes/agregar-alumno/${username}`, {
+        const response = await axios.put(`https://entradas-backend.vercel.app/docentes/add-alumno/${username}`, {
           matricula,
           correo,
           proyecto,

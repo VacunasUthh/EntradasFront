@@ -17,6 +17,25 @@ interface Student {
   correo: string;
   proyecto: string;
   horario: Horario;
+  nombre?: string;
+  apellido_paterno?: string;
+  apellido_materno?: string;
+  telefono?: string;
+  domicilio?: {
+    estado?: string;
+    municipio?: string;
+    colonia?: string;
+    calle?: string;
+    numero_exterior?: string;
+    numero_interior?: string;
+  };
+  contacto_emergencia?: {
+    nombre_c?: string;
+    apellido_materno_c?: string;
+    apellido_paterno_c?: string;
+    telefono_c?: string;
+    parentesco?: string;
+  };
 }
 
 interface Props {
@@ -52,9 +71,21 @@ const StudentList: React.FC<Props> = ({ username }) => {
     fetchStudents();
   }, [username]);
 
-  const handleStudentClick = (student: Student) => {
-    setSelectedStudent(student);
-    setIsModalVisible(true);
+  const handleStudentClick = async (student: Student) => {
+    try {
+      const url = `https://entradas-backend.vercel.app/alumnos/${student.matricula}`;
+      const response = await axios.get(url);
+
+      if (response.data) {
+        setSelectedStudent(response.data);
+        setIsModalVisible(true);
+      } else {
+        setError('No se encontraron datos para este alumno');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      setError('Error al obtener los datos del alumno');
+    }
   };
 
   const handleModalClose = () => {
@@ -147,24 +178,26 @@ const StudentList: React.FC<Props> = ({ username }) => {
       >
         {selectedStudent && (
           <div>
-            <p><strong>Nombre:</strong> {selectedStudent.matricula}</p>
-            <p><strong>Apellido paterno:</strong></p>
-            <p><strong>Apellido materno:</strong></p>
-            <p><strong>Telefono:</strong></p>
+            <p><strong>Nombre:</strong> {selectedStudent.nombre}</p>
+            <p><strong>Apellido paterno:</strong> {selectedStudent.apellido_paterno}</p>
+            <p><strong>Apellido materno:</strong> {selectedStudent.apellido_materno}</p>
+            <p><strong>Telefono:</strong> {selectedStudent.telefono}</p>
             <p><strong>Domicilio:</strong></p>
             <ul>
-              <li><strong>Estado:</strong> </li>
-              <li><strong>Municipio:</strong> </li>
-              <li><strong>Colonia:</strong> </li>
-              <li><strong>Calle:</strong> </li>
-              <li><strong>Numero exterior:</strong> </li>
-              <li><strong>Numero interior:</strong> </li>
+              <li><strong>Estado:</strong> {selectedStudent.domicilio?.estado}</li>
+              <li><strong>Municipio:</strong> {selectedStudent.domicilio?.municipio}</li>
+              <li><strong>Colonia:</strong> {selectedStudent.domicilio?.colonia}</li>
+              <li><strong>Calle:</strong> {selectedStudent.domicilio?.calle}</li>
+              <li><strong>Numero exterior:</strong> {selectedStudent.domicilio?.numero_exterior}</li>
+              <li><strong>Numero interior:</strong> {selectedStudent.domicilio?.numero_interior}</li>
             </ul>
             <p><strong>Contacto de emergencia:</strong></p>
             <ul>
-              <li><strong>Nombre:</strong> </li>
-              <li><strong>Telefono:</strong> </li>
-              <li><strong>Parentesco:</strong> </li>
+              <li><strong>Nombre:</strong> {selectedStudent.contacto_emergencia?.nombre_c}</li>
+              <li><strong>Apellido paterno:</strong> {selectedStudent.contacto_emergencia?.apellido_paterno_c}</li>
+              <li><strong>Apellido materno:</strong> {selectedStudent.contacto_emergencia?.apellido_materno_c}</li>
+              <li><strong>Telefono:</strong> {selectedStudent.contacto_emergencia?.telefono_c}</li>
+              <li><strong>Parentesco:</strong> {selectedStudent.contacto_emergencia?.parentesco}</li>
             </ul>
           </div>
         )}
