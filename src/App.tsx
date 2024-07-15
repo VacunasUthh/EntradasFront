@@ -86,10 +86,10 @@ const App: React.FC = () => {
               }}
             >
               {currentSection === 'welcome' && <Welcome username={user || ''} />}
-              {currentSection === 'schedule' && <Schedule />}
+              {currentSection === 'schedule' && <Schedule  username={user || ''}/>}
               {currentSection === 'addStudents' && <AddStudent username={user || ''}/>}
               {currentSection === 'studentList' && <StudentList username={user || ''}/>}
-              {currentSection === 'assignSchedule' && <AssignSchedule studentId={user || ''}/>}
+              {currentSection === 'assignSchedule' && <AssignSchedule username={user || ''}/>}
 
             </Content>
             <Footer style={{ textAlign: 'center', backgroundColor: colors.footerBg, color: colors.text }}>

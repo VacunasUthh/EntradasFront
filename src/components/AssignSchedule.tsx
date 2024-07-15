@@ -9,8 +9,7 @@ const { Title } = Typography;
 
 interface Horario {
   entrada: Moment;
-  recesoInicio: Moment;
-  recesoFin: Moment;
+  receso: Moment;
   salida: Moment;
 }
 
@@ -20,20 +19,21 @@ interface Alumno {
 }
 
 interface Props {
-  studentId: string;
+  username: string;
 }
 
-const AssignSchedule: React.FC<Props> = ({ studentId }) => {
+const AssignSchedule: React.FC<Props> = ({ username }) => {
   const [loading, setLoading] = useState(false);
   const [alumnos, setAlumnos] = useState<Alumno[]>([]);
+  const [selectedAlumnos, setSelectedAlumnos] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchAlumnos = async () => {
       try {
-        const response = await axios.get('https://entradas-backend.vercel.app/students');
-        const alumnosData = response.data.map((alumno: any) => ({
-          value: alumno.id,
-          label: alumno.name,
+        const response = await axios.get(`https://entradas-backend.vercel.app/docentes/mat?matricula=${username}`);
+        const alumnosData = response.data.alumnos.map((alumno: any) => ({
+          value: alumno.matricula,
+          label: alumno.matricula,
         }));
         setAlumnos(alumnosData);
       } catch (error) {
@@ -43,40 +43,41 @@ const AssignSchedule: React.FC<Props> = ({ studentId }) => {
     };
 
     fetchAlumnos();
-  }, []);
+  }, [username]);
 
   const onFinish = async (values: any) => {
     setLoading(true);
 
-    const horario: Horario = {
-      entrada: values.entrada,
-      recesoInicio: values.recesoInicio,
-      recesoFin: values.recesoFin,
-      salida: values.salida,
-    };
+    const horarios = selectedAlumnos.map((alumnoId) => ({
+      alumnoMatricula: alumnoId,
+      horario: {
+        entrada: values.entrada.format('HH:mm'),
+        receso: values.receso.format('mm'), 
+        salida: values.salida.format('HH:mm'),
+      }
+    }));
 
     try {
-      const url = `https://entradas-backend.vercel.app/students/${studentId}/schedule`;
-      const response = await axios.put(url, {
-        horario: {
-          entrada: horario.entrada.format('HH:mm'),
-          recesoInicio: horario.recesoInicio.format('HH:mm'),
-          recesoFin: horario.recesoFin.format('HH:mm'),
-          salida: horario.salida.format('HH:mm'),
-        }
-      });
+      const url = `https://entradas-backend.vercel.app/docentes/update-multiple-horarios/${username}`;
+      const response = await axios.put(url, horarios);
 
       if (response.status === 200) {
-        message.success('Horario asignado con éxito');
+        message.success('Horarios asignados con éxito');
+        console.log(response.data);
       } else {
-        message.error('Error al asignar el horario');
+        message.error('Error al asignar los horarios');
       }
     } catch (error) {
       console.error('Error:', error);
-      message.error('Error al asignar el horario');
+      message.error('Error al asignar los horarios');
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleAlumnosChange = (selectedOptions: any) => {
+    const alumnosIds = selectedOptions.map((option: any) => option.value);
+    setSelectedAlumnos(alumnosIds);
   };
 
   return (
@@ -88,8 +89,7 @@ const AssignSchedule: React.FC<Props> = ({ studentId }) => {
           onFinish={onFinish}
           initialValues={{
             entrada: moment('08:00', 'HH:mm'),
-            recesoInicio: moment('10:00', 'HH:mm'),
-            recesoFin: moment('10:30', 'HH:mm'),
+            receso: moment('10:30', 'HH:mm'),
             salida: moment('14:00', 'HH:mm'),
           }}
           className="assign-schedule-form"
@@ -105,6 +105,7 @@ const AssignSchedule: React.FC<Props> = ({ studentId }) => {
               options={alumnos}
               className="basic-multi-select"
               classNamePrefix="select"
+              onChange={handleAlumnosChange}
             />
           </Form.Item>
 
@@ -129,26 +130,19 @@ const AssignSchedule: React.FC<Props> = ({ studentId }) => {
 
             <Col span={12}>
               <Form.Item
-                label="Inicio del Receso"
-                name="recesoInicio"
+                label="Receso"
+                name="receso"
                 rules={[{ required: true, message: 'Por favor, ingrese la hora de inicio del receso' }]}
               >
-                <TimePicker format={'HH:mm'} />
+                <TimePicker format={'mm'} />
               </Form.Item>
 
-              <Form.Item
-                label="Fin del Receso"
-                name="recesoFin"
-                rules={[{ required: true, message: 'Por favor, ingrese la hora de fin del receso' }]}
-              >
-                <TimePicker format={'HH:mm'} />
-              </Form.Item>
             </Col>
           </Row>
 
           <Form.Item>
             <Button type="primary" htmlType="submit" loading={loading} block className="assign-schedule-button">
-              Asignar Horario
+              Asignar Horarios
             </Button>
           </Form.Item>
         </Form>

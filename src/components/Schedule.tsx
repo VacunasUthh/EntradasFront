@@ -1,23 +1,24 @@
 import React, { useState } from 'react';
-import { Calendar as AntCalendar, theme } from 'antd';
-import type { CalendarProps } from 'antd';
+import { Alert, Calendar } from 'antd';
 import type { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import './estilos/Schedule.css';
 
-const onPanelChange = (value: Dayjs, mode: CalendarProps<Dayjs>['mode']) => {
-  console.log(value.format('YYYY-MM-DD'), mode);
-};
+interface Props {
+  username: string;
+}
 
-const Schedule: React.FC = () => {
+const Schedule: React.FC<Props> = ({ username }) => {
   const [matricula, setMatricula] = useState('');
   const [errors, setErrors] = useState<{ matricula?: string }>({});
   const [entrada, setEntrada] = useState('08:00'); // Estado para la hora de entrada
-  const [recesoInicio, setRecesoInicio] = useState('11:00'); // Estado para la hora de inicio del receso
-  const [recesoFin, setRecesoFin] = useState('11:40'); // Estado para la hora de fin del receso
+  const [receso, setReceso] = useState('11:00'); // Estado para la hora de inicio del receso
   const [salida, setSalida] = useState('16:00'); // Estado para la hora de salida
   const [nombreAlumno, setNombreAlumno] = useState(''); // Estado para el nombre del alumno
   const [proyecto, setProyecto] = useState(''); // Estado para el proyecto
   const [faltas, setFaltas] = useState(''); // Estado para las faltas
+  const [value, setValue] = useState(() => dayjs('2017-01-25'));
+  const [selectedValue, setSelectedValue] = useState(() => dayjs('2017-01-25'));
 
   const handleMatriculaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMatricula(e.target.value);
@@ -27,12 +28,8 @@ const Schedule: React.FC = () => {
     setEntrada(e.target.value);
   };
 
-  const handleRecesoInicioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setRecesoInicio(e.target.value);
-  };
-
-  const handleRecesoFinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setRecesoFin(e.target.value);
+  const handleRecesoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setReceso(e.target.value);
   };
 
   const handleSalidaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -68,12 +65,13 @@ const Schedule: React.FC = () => {
     }
   };
 
-  const { token } = theme.useToken();
+  const onSelect = (newValue: Dayjs) => {
+    setValue(newValue);
+    setSelectedValue(newValue);
+  };
 
-  const calendarWrapperStyle: React.CSSProperties = {
-    width: 300,
-    border: `1px solid ${token.colorBorderSecondary}`,
-    borderRadius: token.borderRadiusLG,
+  const onPanelChange = (newValue: Dayjs) => {
+    setValue(newValue);
   };
 
   return (
@@ -91,11 +89,10 @@ const Schedule: React.FC = () => {
       {errors.matricula && <p className="error-message">{errors.matricula}</p>}
       <div className="main-content">
         <div className="info-section">
-        <div className="info-left">
+          <div className="info-left">
             <div className="hours-display">
               <p>Entrada: 8:00</p>
-              <p>Receso Inicio: 11:00</p>
-              <p>Receso Fin: 11:40</p>
+              <p>Receso : 11:00</p>
               <p>Salida: 14:00</p>
             </div>
           </div>
@@ -129,11 +126,6 @@ const Schedule: React.FC = () => {
               onChange={handleFaltasChange} 
             />
           </div>
-        </div>
-        <div className="calendar-section">
-          <div style={calendarWrapperStyle}>
-            <AntCalendar fullscreen={false} onPanelChange={onPanelChange} />
-          </div>
           <div className="info-right">
             <div className="data-inputs">
               <label htmlFor="entrada">Entrada:</label>
@@ -143,19 +135,12 @@ const Schedule: React.FC = () => {
                 value={entrada} 
                 onChange={handleEntradaChange} 
               />
-              <label htmlFor="receso-inicio">Receso Inicio:</label>
+              <label htmlFor="receso">Receso:</label>
               <input 
                 type="time" 
                 id="receso-inicio" 
-                value={recesoInicio} 
-                onChange={handleRecesoInicioChange} 
-              />
-              <label htmlFor="receso-fin">Receso Fin:</label>
-              <input 
-                type="time" 
-                id="receso-fin" 
-                value={recesoFin} 
-                onChange={handleRecesoFinChange} 
+                value={receso} 
+                onChange={handleRecesoChange} 
               />
               <label htmlFor="salida">Salida:</label>
               <input 
@@ -165,6 +150,12 @@ const Schedule: React.FC = () => {
                 onChange={handleSalidaChange} 
               />
             </div>
+          </div>
+        </div>
+        <div className="calendar-section">
+          <Alert message={`Fecha seleccionada: ${selectedValue?.format('YYYY-MM-DD')}`} />
+          <div>
+            <Calendar value={value} onSelect={onSelect} onPanelChange={onPanelChange} />
           </div>
         </div>
       </div>

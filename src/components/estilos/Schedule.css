@@ -49,9 +49,8 @@
 
 .main-content {
   display: flex;
-  flex-direction: row; 
-  justify-content: space-between; 
-  align-items: flex-start;
+  flex-direction: column; /* Cambiado a columna para alinear verticalmente */
+  align-items: center;
   width: 100%;
   max-width: 1200px;
 }
@@ -59,8 +58,8 @@
 .info-section {
   display: flex;
   justify-content: space-between;
-  flex: 3;
-  margin-right: 20px;
+  width: 100%; /* Asegurar que los contenedores se distribuyan en todo el ancho */
+  margin-bottom: 20px;
 }
 
 .info-left, .info-center, .info-right {
@@ -71,21 +70,9 @@
   justify-content: center;
   padding: 20px;
   border: 1px solid #e6af2a; /* Color para bordes */
-  border-radius: 5px;
+  border-radius: 8px;
   background-color: #e6af2a; /* Color de fondo */
-}
-
-.info-left {
-  margin-right: 20px;
-}
-
-.info-center {
-  flex: 2;
-  margin: 0 20px;
-}
-
-.info-right {
-  margin-left: 20px;
+  margin: 0 20px; /* Espaciado entre contenedores */
 }
 
 .data-inputs, .hours-display {
@@ -95,10 +82,11 @@
 }
 
 .calendar-section {
-  flex: 1;
+  width: 100%; /* Asegurar que el calendario ocupe todo el ancho */
   display: flex;
-  justify-content: center;
+  flex-direction: column; /* Cambiado a columna para alinear la alerta encima del calendario */
   align-items: center;
+  margin-top: 20px; /* Añadir espacio entre los contenedores y el calendario */
 }
 
 .calendar-section table {
