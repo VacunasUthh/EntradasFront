@@ -49,6 +49,7 @@ const StudentList: React.FC<Props> = ({ username }) => {
   const [error, setError] = useState<string | null>(null);
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [noData, setNoData] = useState(false);
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -78,19 +79,26 @@ const StudentList: React.FC<Props> = ({ username }) => {
 
       if (response.data) {
         setSelectedStudent(response.data);
+        setNoData(false);
         setIsModalVisible(true);
       } else {
-        setError('No se encontraron datos para este alumno');
+        setNoData(true);
+        setSelectedStudent(null);
+        setIsModalVisible(true);
       }
     } catch (error) {
       console.error('Error:', error);
       setError('Error al obtener los datos del alumno');
+      setNoData(true);
+      setSelectedStudent(null);
+      setIsModalVisible(true);
     }
   };
 
   const handleModalClose = () => {
     setIsModalVisible(false);
     setSelectedStudent(null);
+    setNoData(false);
   };
 
   const columns = [
@@ -176,30 +184,34 @@ const StudentList: React.FC<Props> = ({ username }) => {
           </Button>,
         ]}
       >
-        {selectedStudent && (
-          <div>
-            <p><strong>Nombre:</strong> {selectedStudent.nombre}</p>
-            <p><strong>Apellido paterno:</strong> {selectedStudent.apellido_paterno}</p>
-            <p><strong>Apellido materno:</strong> {selectedStudent.apellido_materno}</p>
-            <p><strong>Telefono:</strong> {selectedStudent.telefono}</p>
-            <p><strong>Domicilio:</strong></p>
-            <ul>
-              <li><strong>Estado:</strong> {selectedStudent.domicilio?.estado}</li>
-              <li><strong>Municipio:</strong> {selectedStudent.domicilio?.municipio}</li>
-              <li><strong>Colonia:</strong> {selectedStudent.domicilio?.colonia}</li>
-              <li><strong>Calle:</strong> {selectedStudent.domicilio?.calle}</li>
-              <li><strong>Numero exterior:</strong> {selectedStudent.domicilio?.numero_exterior}</li>
-              <li><strong>Numero interior:</strong> {selectedStudent.domicilio?.numero_interior}</li>
-            </ul>
-            <p><strong>Contacto de emergencia:</strong></p>
-            <ul>
-              <li><strong>Nombre:</strong> {selectedStudent.contacto_emergencia?.nombre_c}</li>
-              <li><strong>Apellido paterno:</strong> {selectedStudent.contacto_emergencia?.apellido_paterno_c}</li>
-              <li><strong>Apellido materno:</strong> {selectedStudent.contacto_emergencia?.apellido_materno_c}</li>
-              <li><strong>Telefono:</strong> {selectedStudent.contacto_emergencia?.telefono_c}</li>
-              <li><strong>Parentesco:</strong> {selectedStudent.contacto_emergencia?.parentesco}</li>
-            </ul>
-          </div>
+        {noData ? (
+          <p>No se encontraron datos del alumno seleccionado.</p>
+        ) : (
+          selectedStudent && (
+            <div>
+              <p><strong>Nombre:</strong> {selectedStudent.nombre}</p>
+              <p><strong>Apellido paterno:</strong> {selectedStudent.apellido_paterno}</p>
+              <p><strong>Apellido materno:</strong> {selectedStudent.apellido_materno}</p>
+              <p><strong>Telefono:</strong> {selectedStudent.telefono}</p>
+              <p><strong>Domicilio:</strong></p>
+              <ul>
+                <li><strong>Estado:</strong> {selectedStudent.domicilio?.estado}</li>
+                <li><strong>Municipio:</strong> {selectedStudent.domicilio?.municipio}</li>
+                <li><strong>Colonia:</strong> {selectedStudent.domicilio?.colonia}</li>
+                <li><strong>Calle:</strong> {selectedStudent.domicilio?.calle}</li>
+                <li><strong>Numero exterior:</strong> {selectedStudent.domicilio?.numero_exterior}</li>
+                <li><strong>Numero interior:</strong> {selectedStudent.domicilio?.numero_interior}</li>
+              </ul>
+              <p><strong>Contacto de emergencia:</strong></p>
+              <ul>
+                <li><strong>Nombre:</strong> {selectedStudent.contacto_emergencia?.nombre_c}</li>
+                <li><strong>Apellido paterno:</strong> {selectedStudent.contacto_emergencia?.apellido_paterno_c}</li>
+                <li><strong>Apellido materno:</strong> {selectedStudent.contacto_emergencia?.apellido_materno_c}</li>
+                <li><strong>Telefono:</strong> {selectedStudent.contacto_emergencia?.telefono_c}</li>
+                <li><strong>Parentesco:</strong> {selectedStudent.contacto_emergencia?.parentesco}</li>
+              </ul>
+            </div>
+          )
         )}
       </Modal>
     </div>

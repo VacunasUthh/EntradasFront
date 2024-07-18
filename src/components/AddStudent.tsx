@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { Alert } from 'antd';
 import './estilos/AddStudent.css';
 
 interface Props {
@@ -8,7 +9,6 @@ interface Props {
 
 const AddStudent: React.FC<Props> = ({ username }) => {
   const [matricula, setMatricula] = useState<string>('');
-  const [correo, setCorreo] = useState<string>('');
   const [proyecto, setProyecto] = useState<string>('');
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [successMessage, setSuccessMessage] = useState<string>('');
@@ -18,11 +18,6 @@ const AddStudent: React.FC<Props> = ({ username }) => {
 
     if (!/^\d{8}$/.test(matricula)) {
       errors.matricula = 'La matrícula debe ser de exactamente 8 dígitos.';
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(correo)) {
-      errors.correo = 'El correo electrónico no es válido.';
     }
 
     if (!proyecto) {
@@ -37,6 +32,7 @@ const AddStudent: React.FC<Props> = ({ username }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
+      const correo = `${matricula}@uthh.edu.mx`;
       try {
         const response = await axios.put(`https://entradas-backend.vercel.app/docentes/add-alumno/${username}`, {
           matricula,
@@ -45,14 +41,13 @@ const AddStudent: React.FC<Props> = ({ username }) => {
           horario: {
             entrada: '08:00',
             receso: 40,
-            salida: '14:00',
+            salida: '16:00',
           }
         });
 
         if (response.status === 200) {
           setSuccessMessage('Estudiante añadido exitosamente');
           setMatricula('');
-          setCorreo('');
           setProyecto('');
           setErrors({});
         }
@@ -72,7 +67,7 @@ const AddStudent: React.FC<Props> = ({ username }) => {
   return (
     <div className="add-student-container">
       <h2>Añadir Alumnos</h2>
-      {successMessage && <p className="success-message">{successMessage}</p>}
+      {successMessage && <Alert message={successMessage} type="success" showIcon closable />}
       <form onSubmit={handleSubmit} className="form-container">
         <div className="form-group">
           <label>Matrícula:</label>
@@ -87,17 +82,6 @@ const AddStudent: React.FC<Props> = ({ username }) => {
           {errors.matricula && <span className="error">{errors.matricula}</span>}
         </div>
         <div className="form-group">
-          <label>Correo:</label>
-          <input
-            type="email"
-            value={correo}
-            onChange={(e) => setCorreo(e.target.value)}
-            className={errors.correo ? 'input-error' : ''}
-            required
-          />
-          {errors.correo && <span className="error">{errors.correo}</span>}
-        </div>
-        <div className="form-group">
           <label>Proyecto:</label>
           <input
             type="text"
@@ -108,11 +92,7 @@ const AddStudent: React.FC<Props> = ({ username }) => {
           />
           {errors.proyecto && <span className="error">{errors.proyecto}</span>}
         </div>
-        <div className="form-group">
-          <label>Descripción:</label>
-          
-          {errors.descripcion && <span className="error">{errors.descripcion}</span>}
-        </div>
+        
         <button type="submit">Añadir</button>
       </form>
     </div>

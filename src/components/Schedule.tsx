@@ -21,12 +21,13 @@ const Schedule: React.FC<Props> = ({ username }) => {
   const [value, setValue] = useState(() => dayjs());
   const [selectedValue, setSelectedValue] = useState(() => dayjs());
   const [entradaR, setEntradaR] = useState('');
-  const [recesoR, setRecesoR] = useState('');
-  const [salidaR, setSalidaR] = useState('');
+  const [inicioRecesoR, setInicioRecesoR] = useState('');
+  const [finRecesoR, setFinRecesoR] = useState('');  const [salidaR, setSalidaR] = useState('');
+  const [shouldFetch, setShouldFetch] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
-      if (matricula && selectedValue) {
+      if (matricula && selectedValue && shouldFetch) {
         try {
           // Obtener el horario y proyecto del alumno
           const response = await axios.get(`https://entradas-backend.vercel.app/docentes/mat?matricula=${username}`);
@@ -35,7 +36,7 @@ const Schedule: React.FC<Props> = ({ username }) => {
           if (alumno) {
             setProyecto(alumno.proyecto || 'Sin asignar');
             setEntrada(alumno.horario.entrada || 'Sin asignar');
-            setReceso(alumno.horario.receso.toString() || 'Sin asignar'); // Convert receso to string
+            setReceso(alumno.horario.receso || 'Sin asignar');
             setSalida(alumno.horario.salida || 'Sin asignar');
             
             // Obtener el nombre completo del alumno
@@ -50,15 +51,18 @@ const Schedule: React.FC<Props> = ({ username }) => {
             
             // Resetear los valores de registros de asistencia
             let entradaRegistro = 'Sin asignar';
-            let recesoRegistro = 'Sin asignar';
+            let IniciorecesoRegistro = 'Sin asignar';
+            let SalidarecesoRegistro = 'Sin asignar';
             let salidaRegistro = 'Sin asignar';
             
             // Asignar los valores de registros de asistencia correspondientes
             registros.forEach((registro: any) => {
               if (registro.evento === 'Entrada') {
                 entradaRegistro = registro.hora;
-              } else if (registro.evento === 'Receso') {
-                recesoRegistro = registro.hora;
+              } else if (registro.evento === 'Inicio del receso') {
+                IniciorecesoRegistro = registro.hora;
+              } else if (registro.evento === 'Fin del receso') {
+                SalidarecesoRegistro = registro.hora;
               } else if (registro.evento === 'Salida') {
                 salidaRegistro = registro.hora;
               }
@@ -66,7 +70,8 @@ const Schedule: React.FC<Props> = ({ username }) => {
             
             // Actualizar los estados con los registros de asistencia
             setEntradaR(entradaRegistro);
-            setRecesoR(recesoRegistro);
+            setInicioRecesoR(IniciorecesoRegistro);
+            setFinRecesoR(SalidarecesoRegistro);
             setSalidaR(salidaRegistro);
             
           } else {
@@ -80,12 +85,14 @@ const Schedule: React.FC<Props> = ({ username }) => {
         } catch (error) {
           console.error('Error fetching alumno:', error);
           message.error('Error al buscar el alumno');
+        } finally {
+          setShouldFetch(false); // Resetear el estado de shouldFetch
         }
       }
     }
     
     fetchData();
-  }, [matricula, selectedValue, username]);
+  }, [matricula, selectedValue, shouldFetch, username]);
 
   const handleMatriculaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMatricula(e.target.value);
@@ -108,7 +115,7 @@ const Schedule: React.FC<Props> = ({ username }) => {
   };
 
   const handleRecesoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setRecesoR(e.target.value);
+    setInicioRecesoR(e.target.value);
   };
 
   const handleSalidaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -126,13 +133,7 @@ const Schedule: React.FC<Props> = ({ username }) => {
 
   const handleSearchClick = async () => {
     if (validateMatricula()) {
-      try {
-        // Realizar búsqueda del alumno y registros de asistencia
-        // (se maneja en useEffect para separar lógica)
-      } catch (error) {
-        console.error('Error en la búsqueda:', error);
-        message.error('Error al buscar el alumno');
-      }
+      setShouldFetch(true);
     } else {
       console.log('Errores de validación:', errors);
     }
@@ -141,6 +142,9 @@ const Schedule: React.FC<Props> = ({ username }) => {
   const onSelect = (newValue: Dayjs) => {
     setValue(newValue);
     setSelectedValue(newValue);
+    if (matricula) {
+      setShouldFetch(true); // Activar la búsqueda al seleccionar una fecha si ya se ha buscado la matrícula
+    }
   };
 
   const onPanelChange = (newValue: Dayjs) => {
@@ -175,7 +179,8 @@ const Schedule: React.FC<Props> = ({ username }) => {
               type="text" 
               id="nombre-alumno" 
               value={nombreAlumno} 
-              onChange={handleNombreAlumnoChange} 
+              onChange={handleNombreAlumnoChange}
+              readOnly
             />
             <label htmlFor="matricula">Matrícula:</label>
             <input 
@@ -183,20 +188,23 @@ const Schedule: React.FC<Props> = ({ username }) => {
               id="matricula" 
               value={matricula} 
               onChange={handleMatriculaChange} 
+              readOnly 
             />
             <label htmlFor="proyecto">Proyecto:</label>
             <input 
               type="text" 
               id="proyecto" 
               value={proyecto} 
-              onChange={handleProyectoChange} 
+              onChange={handleProyectoChange}
+              readOnly  
             />
             <label htmlFor="faltas">Faltas:</label>
-            <input 
+            <input
               type="text" 
               id="faltas" 
               value={faltas} 
               onChange={handleFaltasChange} 
+              readOnly 
             />
           </div>
           <div className="info-right">
@@ -207,13 +215,23 @@ const Schedule: React.FC<Props> = ({ username }) => {
                 id="entradaR" 
                 value={entradaR} 
                 onChange={handleEntradaChange} 
+                readOnly 
               />
-              <label htmlFor="recesoR">Registro del receso:</label>
+              <label htmlFor="inicioRecesoR">Inicio del receso:</label>
               <input 
                 type="time" 
-                id="recesoR" 
-                value={recesoR} 
-                onChange={handleRecesoChange} 
+                id="inicioRecesoR" 
+                value={inicioRecesoR} 
+                onChange={handleRecesoChange}
+                readOnly  
+              />
+              <label htmlFor="finRecesoR">Fin del receso:</label>
+              <input 
+                type="time" 
+                id="finRecesoR" 
+                value={finRecesoR} 
+                onChange={handleRecesoChange}
+                readOnly  
               />
               <label htmlFor="salidaR">Registro de la salida:</label>
               <input 
@@ -221,6 +239,7 @@ const Schedule: React.FC<Props> = ({ username }) => {
                 id="salidaR" 
                 value={salidaR} 
                 onChange={handleSalidaChange} 
+                readOnly 
               />
             </div>
           </div>
