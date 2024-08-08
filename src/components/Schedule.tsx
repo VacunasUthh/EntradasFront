@@ -22,58 +22,64 @@ const Schedule: React.FC<Props> = ({ username }) => {
   const [selectedValue, setSelectedValue] = useState(() => dayjs());
   const [entradaR, setEntradaR] = useState('');
   const [inicioRecesoR, setInicioRecesoR] = useState('');
-  const [finRecesoR, setFinRecesoR] = useState('');  const [salidaR, setSalidaR] = useState('');
+  const [finRecesoR, setFinRecesoR] = useState('');
+  const [salidaR, setSalidaR] = useState('');
   const [shouldFetch, setShouldFetch] = useState(false);
+  const [colorEntrada, setColorEntrada] = useState('');
+  const [colorReceso, setColorReceso] = useState('');
+  const [colorSalida, setColorSalida] = useState('');
+  const [showCalendar, setShowCalendar] = useState(true); // Estado para alternar la visibilidad
+  const [attendanceRecords, setAttendanceRecords] = useState<any[]>([]); // Registros de asistencia
 
   useEffect(() => {
     async function fetchData() {
       if (matricula && selectedValue && shouldFetch) {
         try {
-          // Obtener el horario y proyecto del alumno
           const response = await axios.get(`https://entradas-backend.vercel.app/docentes/mat?matricula=${username}`);
           const alumno = response.data.alumnos.find((alumno: any) => alumno.matricula === matricula);
-          
+
           if (alumno) {
             setProyecto(alumno.proyecto || 'Sin asignar');
             setEntrada(alumno.horario.entrada || 'Sin asignar');
             setReceso(alumno.horario.receso || 'Sin asignar');
             setSalida(alumno.horario.salida || 'Sin asignar');
-            
-            // Obtener el nombre completo del alumno
-            const alumnoInfoResponse = await axios.get(`https://entradas-backend.vercel.app/alumnos/${matricula}`);
+
+            const alumnoInfoResponse = await axios.get(`https://entradas-backend.vercel.app/alumnos/mat?matricula=${matricula}`);
             const alumnoInfo = alumnoInfoResponse.data;
             const nombreCompleto = `${alumnoInfo.nombre} ${alumnoInfo.apellido_paterno} ${alumnoInfo.apellido_materno}`;
             setNombreAlumno(nombreCompleto);
-            
-            // Obtener los registros de asistencia del alumno para la fecha seleccionada
+
             const registrosResponse = await axios.get(`https://entradas-backend.vercel.app/registros/buscarRegistros?matricula=${matricula}&fecha=${selectedValue.format('YYYY-MM-DD')}`);
             const registros = registrosResponse.data;
-            
-            // Resetear los valores de registros de asistencia
+
             let entradaRegistro = 'Sin asignar';
-            let IniciorecesoRegistro = 'Sin asignar';
-            let SalidarecesoRegistro = 'Sin asignar';
+            let inicioRecesoRegistro = 'Sin asignar';
+            let finRecesoRegistro = 'Sin asignar';
             let salidaRegistro = 'Sin asignar';
-            
-            // Asignar los valores de registros de asistencia correspondientes
+
             registros.forEach((registro: any) => {
               if (registro.evento === 'Entrada') {
                 entradaRegistro = registro.hora;
               } else if (registro.evento === 'Inicio del receso') {
-                IniciorecesoRegistro = registro.hora;
+                inicioRecesoRegistro = registro.hora;
               } else if (registro.evento === 'Fin del receso') {
-                SalidarecesoRegistro = registro.hora;
+                finRecesoRegistro = registro.hora;
               } else if (registro.evento === 'Salida') {
                 salidaRegistro = registro.hora;
               }
             });
-            
-            // Actualizar los estados con los registros de asistencia
+
             setEntradaR(entradaRegistro);
-            setInicioRecesoR(IniciorecesoRegistro);
-            setFinRecesoR(SalidarecesoRegistro);
+            setInicioRecesoR(inicioRecesoRegistro);
+            setFinRecesoR(finRecesoRegistro);
             setSalidaR(salidaRegistro);
+
+            setColorEntrada(compararHoras(alumno.horario.entrada, entradaRegistro));
+            setColorReceso(compararHoras(alumno.horario.receso, inicioRecesoRegistro));
+            setColorSalida(compararHoras(alumno.horario.salida, salidaRegistro));
             
+            // Establece los registros de asistencia para la tabla
+            setAttendanceRecords(registros);
           } else {
             setNombreAlumno('');
             setProyecto('');
@@ -86,13 +92,25 @@ const Schedule: React.FC<Props> = ({ username }) => {
           console.error('Error fetching alumno:', error);
           message.error('Error al buscar el alumno');
         } finally {
-          setShouldFetch(false); // Resetear el estado de shouldFetch
+          setShouldFetch(false);
         }
       }
     }
-    
+
     fetchData();
   }, [matricula, selectedValue, shouldFetch, username]);
+
+  const compararHoras = (horaAsignada: string, horaRegistrada: string) => {
+    if (!horaRegistrada || horaRegistrada === 'Sin asignar') return 'red';
+
+    const horaAsig = dayjs(horaAsignada, 'HH:mm');
+    const horaReg = dayjs(horaRegistrada, 'HH:mm');
+
+    if (horaReg.isBefore(horaAsig)) return '#2ac528';
+    if (horaReg.isSame(horaAsig)) return 'yellow';
+
+    return 'red';
+  };
 
   const handleMatriculaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMatricula(e.target.value);
@@ -143,12 +161,38 @@ const Schedule: React.FC<Props> = ({ username }) => {
     setValue(newValue);
     setSelectedValue(newValue);
     if (matricula) {
-      setShouldFetch(true); // Activar la búsqueda al seleccionar una fecha si ya se ha buscado la matrícula
+      setShouldFetch(true);
     }
   };
 
   const onPanelChange = (newValue: Dayjs) => {
     setValue(newValue);
+  };
+
+  // Genera todos los días del mes seleccionado
+  const getDaysInMonth = (month: Dayjs) => {
+    const startOfMonth = month.startOf('month');
+    const endOfMonth = month.endOf('month');
+    const days = [];
+
+    for (let date = startOfMonth; date.isBefore(endOfMonth.add(1, 'day')); date = date.add(1, 'day')) {
+      days.push(date);
+    }
+
+    return days;
+  };
+
+  const allDaysOfMonth = getDaysInMonth(selectedValue);
+
+  const getRecordForDay = (day: Dayjs, tipo: string) => {
+    const record = attendanceRecords.find(
+      (rec) => dayjs(rec.fecha).isSame(day, 'day') && rec.tipo === tipo
+    );
+    return record ? record.hora : 'No registrado';
+  };
+
+  const renderAttendance = (record: string) => {
+    return record === 'No registrado' ? '❌' : '✔️';
   };
 
   return (
@@ -166,7 +210,7 @@ const Schedule: React.FC<Props> = ({ username }) => {
       {errors.matricula && <p className="error-message">{errors.matricula}</p>}
       <div className="main-content">
         <div className="info-section">
-          <div className="info-left">
+          <div className="info-left" style={{ backgroundColor: colorEntrada }}>
             <div className="hours-display">
               <p>Entrada: {entrada}</p>
               <p>Receso: {receso}</p>
@@ -174,13 +218,13 @@ const Schedule: React.FC<Props> = ({ username }) => {
             </div>
           </div>
           <div className="info-center">
-            <label htmlFor="nombre-alumno">Nombre del Alumno:</label>
+            <label htmlFor="nombre">Nombre:</label>
             <input 
               type="text" 
-              id="nombre-alumno" 
+              id="nombre" 
               value={nombreAlumno} 
               onChange={handleNombreAlumnoChange}
-              readOnly
+              readOnly 
             />
             <label htmlFor="matricula">Matrícula:</label>
             <input 
@@ -207,7 +251,7 @@ const Schedule: React.FC<Props> = ({ username }) => {
               readOnly 
             />
           </div>
-          <div className="info-right">
+          <div className="info-right" style={{ backgroundColor: colorEntrada }}>
             <div className="data-inputs">
               <label htmlFor="entrada">Registro de la entrada:</label>
               <input 
@@ -217,23 +261,23 @@ const Schedule: React.FC<Props> = ({ username }) => {
                 onChange={handleEntradaChange} 
                 readOnly 
               />
-              <label htmlFor="inicioRecesoR">Inicio del receso:</label>
+              <label htmlFor="receso">Registro de inicio del receso:</label>
               <input 
                 type="time" 
-                id="inicioRecesoR" 
+                id="recesoR" 
                 value={inicioRecesoR} 
-                onChange={handleRecesoChange}
-                readOnly  
+                onChange={handleRecesoChange} 
+                readOnly 
               />
-              <label htmlFor="finRecesoR">Fin del receso:</label>
+              <label htmlFor="receso">Registro de fin del receso:</label>
               <input 
                 type="time" 
-                id="finRecesoR" 
+                id="recesoR" 
                 value={finRecesoR} 
-                onChange={handleRecesoChange}
-                readOnly  
+                onChange={handleRecesoChange} 
+                readOnly 
               />
-              <label htmlFor="salidaR">Registro de la salida:</label>
+              <label htmlFor="salida">Registro de salida:</label>
               <input 
                 type="time" 
                 id="salidaR" 
@@ -246,9 +290,37 @@ const Schedule: React.FC<Props> = ({ username }) => {
         </div>
         <div className="calendar-section">
           <Alert message={`Fecha seleccionada: ${selectedValue?.format('YYYY-MM-DD')}`} />
-          <div>
+          <button className="toggle-view-button" onClick={() => setShowCalendar(!showCalendar)}>
+            {showCalendar ? 'Mostrar Tabla' : 'Mostrar Calendario'}
+          </button>
+          {showCalendar ? (
             <Calendar value={value} onSelect={onSelect} onPanelChange={onPanelChange} />
-          </div>
+          ) : (
+            <div className="attendance-table-section">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Fecha</th>
+                    <th>Entrada</th>
+                    <th>Receso</th>
+                    <th>Salida</th>
+                    <th>Asistencia</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {allDaysOfMonth.map(day => (
+                    <tr key={day.format('YYYY-MM-DD')}>
+                      <td>{day.format('YYYY-MM-DD')}</td>
+                      <td>{getRecordForDay(day, 'Entrada')}</td>
+                      <td>{getRecordForDay(day, 'Inicio del receso')}</td>
+                      <td>{getRecordForDay(day, 'Salida')}</td>
+                      <td>{renderAttendance(getRecordForDay(day, 'Entrada'))}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -6,7 +6,7 @@
 }
 
 .schedule-container p, label {
-  font-size: 16px;
+  font-size: 19px;
   color: black;
 }
 
@@ -69,7 +69,6 @@
   align-items: center;
   justify-content: center;
   padding: 20px;
-  border: 1px solid #e6af2a; /* Color para bordes */
   border-radius: 8px;
   background-color: #e6af2a; /* Color de fondo */
   margin: 0 20px; /* Espaciado entre contenedores */
@@ -81,20 +80,55 @@
   align-items: center;
 }
 
+/* Resto de tus estilos */
+
 .calendar-section {
-  width: 100%; /* Asegurar que el calendario ocupe todo el ancho */
+  width: 100%; 
   display: flex;
-  flex-direction: column; /* Cambiado a columna para alinear la alerta encima del calendario */
+  flex-direction: column; 
   align-items: center;
-  margin-top: 20px; /* Añadir espacio entre los contenedores y el calendario */
+  margin-top: 20px; 
 }
 
-.calendar-section table {
+.calendar-section .ant-calendar {
+  width: 100%; /* Asegura que el calendario ocupe todo el ancho */
+}
+
+.attendance-table-section {
+  width: 140%; /* Asegura que la sección ocupe todo el ancho */
+  max-width: 1200px; /* Tamaño máximo para la tabla */
+  margin-top: 20px;
+  display: flex;
+  justify-content: center; /* Centra la tabla horizontalmente */
+}
+
+.attendance-table-section table {
   border-collapse: collapse;
+  width: 120%; /* Ajusta el ancho de la tabla */
+  background-color: #ffffff;
+  font-size: 15px; /* Tamaño de fuente más grande para la tabla */
 }
 
-.calendar-section td {
-  border: 1px solid black;
-  padding: 10px;
+.attendance-table-section th, .attendance-table-section td {
+  border: 1px solid #ddd;
+  padding: 12px; /* Aumenta el padding para hacer la tabla más grande */
   text-align: center;
+}
+
+.attendance-table-section th {
+  background-color: #e5e7e9;
+  color: #000000;
+  font-weight: bold;
+}
+
+.attendance-table-section tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.attendance-table-section tr:hover {
+  background-color: #e0e0e0;
+}
+
+.attendance-table-section td {
+  color: #000000;
 }

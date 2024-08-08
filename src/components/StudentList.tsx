@@ -74,7 +74,7 @@ const StudentList: React.FC<Props> = ({ username }) => {
 
   const handleStudentClick = async (student: Student) => {
     try {
-      const url = `https://entradas-backend.vercel.app/alumnos/${student.matricula}`;
+      const url = `https://entradas-backend.vercel.app/alumnos/mat?matricula=${student.matricula}`;
       const response = await axios.get(url);
 
       if (response.data) {
